@@ -99,23 +99,19 @@ def save_route(data):
  
     for travel in data["simplified"]:
         if count == 0:
- 
-            # Writing headers of CSV file
             header = travel.keys()
             csv_writer.writerow(header)
             count += 1
  
-        # Writing data of CSV file
         csv_writer.writerow(travel.values())
  
     csv_file.close()
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="")
+    parser = argparse.ArgumentParser(description="This application creates a well formated json file of the full data and a csv file of a selection of attributes")
 
-    parser.add_argument("--url", required=True)
-    #parser.add_argument("--")
+    parser.add_argument("--url", required=True, help="url has to be the shared link from the eurail application: python3 get_route.py --url https://share.eurailapp.com/xxxx")
 
     args = parser.parse_args()
 
