@@ -11,7 +11,8 @@ def extract_route(url):
     html = mybytes.decode("utf8")
     fp.close()
 
-    payload = json.loads(re.findall("payload\s=\s(\{[^;]+);", html)[0])
+    regex_string = re.findall("payload\s=\s(\{.+?});", html)[0]
+    payload = json.loads(regex_string)
 
     travels = sort_travels(payload["travels"])
 
