@@ -112,7 +112,7 @@ def save_route(data):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="This application creates a well formated json file of the full data and a csv file of a selection of attributes")
 
-    parser.add_argument("--url", required=True, help="url has to be the shared link from the eurail application: python3 get_route.py --url https://share.eurailapp.com/xxxx")
+    parser.add_argument("--url", required=True, help='url has to be the shared link from the eurail application: python3 get_route.py --url "https://share.eurailapp.com/xxxx" ')
 
     args = parser.parse_args()
 
