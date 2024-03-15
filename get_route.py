@@ -30,38 +30,36 @@ def extract_route(url):
     }
 
 def simplify_route(travels):
+    nodatamarker = '---------'
     simplified = []
     for travel in travels:
 
         interchanges = ""
-        trainnames = ""
         for l in range(len(travel["legs"]) - 1):
             interchanges += (travel["legs"][l]["infoJson"]["trainStopStations"][-1]["name"]) + ", "
 
-        for l in range(len(travel["legs"])):
-            trainnames += (travel["legs"][l]["infoJson"]["trainName"]) + ", "
-
-        if len(interchanges) == 0:
-            interchanges = None
-        else:
-            interchanges = interchanges[:-2]
-
         date = add_leading_zeros(f'{travel["infoJson"]["date"]["year"]}/{travel["infoJson"]["date"]["month"]}/{travel["infoJson"]["date"]["day"]}')
-        departureTime = add_leading_zeros(f'{travel["infoJson"]["departureTime"]["hours"]}:{travel["infoJson"]["departureTime"]["minutes"]}')
-        arrivalTime = add_leading_zeros(f'{travel["infoJson"]["arrivalTime"]["hours"]}:{travel["infoJson"]["arrivalTime"]["minutes"]}')
-        duration = f'{travel["infoJson"]["arrivalTime"]["hours"] - travel["infoJson"]["departureTime"]["hours"]}:{travel["infoJson"]["arrivalTime"]["minutes"] - travel["infoJson"]["departureTime"]["minutes"]}'
 
-        simplified.append({
-            "timestamp": travel["date"],
-            "from": f'{travel["from"]}, {travel["legs"][0]["infoJson"]["trainStopStations"][0]["country"]}',
-            "to": f'{travel["to"]}, {travel["legs"][-1]["infoJson"]["trainStopStations"][-1]["country"]}',
-            "date": date,
-            "trainNames": trainnames,
-            "departureTime": departureTime,
-            "arrivalTime": arrivalTime,
-            "duration": add_leading_zeros(correct_negative_minutes(duration)),
-            "interchanges": interchanges
-        })
+        timestamp = travel["date"]
+
+        for l in range(len(travel["legs"])):
+            leg = travel["legs"][l]["infoJson"]
+
+            if l > 0:
+                timestamp = nodatamarker
+                date = nodatamarker
+
+            simplified.append({
+                "timestamp": timestamp,
+                "from": f'{leg["trainStopStations"][0]["name"]}, {leg["trainStopStations"][0]["country"]}',
+                "to": f'{leg["trainStopStations"][-1]["name"]}, {leg["trainStopStations"][-1]["country"]}',
+                "date": date,
+                "trainNames": (travel["legs"][l]["infoJson"]["trainName"]),
+                "departureTime": add_leading_zeros(f'{leg["startTime"]["hours"]}:{leg["startTime"]["minutes"]}'),
+                "arrivalTime": add_leading_zeros(f'{leg["endTime"]["hours"]}:{leg["endTime"]["minutes"]}'),
+                "duration": add_leading_zeros(f'{leg["duration"]["hours"]}:{leg["duration"]["minutes"]}'),
+            })
+
     return simplified
 
 def sort_travels(travels):
