@@ -34,8 +34,12 @@ def simplify_route(travels):
     for travel in travels:
 
         interchanges = ""
+        trainnames = ""
         for l in range(len(travel["legs"]) - 1):
             interchanges += (travel["legs"][l]["infoJson"]["trainStopStations"][-1]["name"]) + ", "
+
+        for l in range(len(travel["legs"])):
+            trainnames += (travel["legs"][l]["infoJson"]["trainName"]) + ", "
 
         if len(interchanges) == 0:
             interchanges = None
@@ -52,6 +56,7 @@ def simplify_route(travels):
             "from": f'{travel["from"]}, {travel["legs"][0]["infoJson"]["trainStopStations"][0]["country"]}',
             "to": f'{travel["to"]}, {travel["legs"][-1]["infoJson"]["trainStopStations"][-1]["country"]}',
             "date": date,
+            "trainNames": trainnames,
             "departureTime": departureTime,
             "arrivalTime": arrivalTime,
             "duration": add_leading_zeros(correct_negative_minutes(duration)),
